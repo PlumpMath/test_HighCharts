@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+    <script>
+        //test data
+        //        var jsVar = "zhaoxioakai";
+        //        var tmp;
+        //        var txt = '{"datas":[' + '{"name":"Bill","data":[1, 2, 3]},'
+        //                + '{"name":"Kai","data":[1, 4, 3]},'
+        //                + '{"name":"Nick","data":[1, 8, 3]}]}';
+        //        var jsondata = eval("(" + txt + ")");
+        var chart;
+        $(function () {
+//            file:///F:/Code Save/HTML5Learn/HTML5_HelloWorld/TestHtml/test_HighChart.html
+//            $.ajax({
+//                url: "lineServlet",
+//                type: "GET",
+//                success: function(data){
+//                    console.debug(data)
+
+
+//            var a = {
+//                "name": jsVar,
+//                "data": [1, 2, 3],
+//            };
+//            var zero = [1, 7, 3];
+
+
+//            $(document).ready(function () {
+//                //每隔3秒自动调用方法，实现图表的实时更新
+//                window.setInterval(getForm, 1000);
+//            });
+
+            $(document).ready(function () {
+                chart = {
+                    chart: {
+                        renderTo: 'container',
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'My first Highcharts chart'
+                    },
+                    xAxis: {
+                        categories: ['my', 'first', 'chart']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'something'
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+//                    series: [{
+//                        name: a.name,
+//                        data: a.data
+//                    }, {
+//                        name: '数组数据',
+//                        data: zero
+//                    }]
+                    series: []
+                };
+                $('#test_button').on('click', function (e) {
+                    testC('Hello World!');
+                });
+                $('#review_button').on('click', function (e) {
+                    reviewData();
+                });
+
+            });
+
+
+            function clearPlot() {
+                var series = chart.series;
+                while (series.length > 0) {
+                    series[0].remove(false);
+                }
+                chart.redraw();
+            }
+
+            function reviewData() {
+
+//                callbackObj.showMessage('NiHao');
+//                var data=callbackObj.inputJsonString;
+//                alert('<%=callbackObj.inputJsonString%>');
+//                var jsondata = eval("(" + data + ")");
+//                alert(jsondata);
+//                try {
+//                    for (var i = 0, len = jsondata.datas.length; i < len; i++) {
+//                    chart.addSeries({id:i,name:jsondata.datas.[i].name,data:jsondata.datas.[i].data},false);
+//                    }
+//                } catch (e) {
+//                }
+            }
+
+        });
+        function testC(testtest) {
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(testtest, "text/xml")
+            var $xml = $(xmlDoc);
+            $xml.find('categories item').each(function (i, category) {
+                chart.xAxis.categories.push($(category).text());
+            });
+            $xml.find('series').each(function (i, series) {
+                var seriesOptions = {
+                    name: $(series).find('name').text(),
+                    data: []
+                };
+                $(series).find('data point').each(function (i, point) {
+                    seriesOptions.data.push(
+                            parseInt($(point).text())
+                    );
+                });
+                chart.series.push(seriesOptions);
+            });
+            //ch do not used!
+            var ch = new Highcharts.Chart(chart);
+        }
+
+    </script>
+</head>
+<body>
+<p id="testchart"></p>
+<button id="test_button">测试</button>
+<button id="review_button">重新加载</button>
+<div id="container" style="min-width:400px;height:400px;"></div>
+</body>
+</html>
